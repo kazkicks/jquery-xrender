@@ -154,3 +154,12 @@ xpathバインド時に呼ばれます
   
 ※第一引数にxpathに指定した値が入ります。
 
+
+重要
+====
+Same Origin Policyを回避するには、サーバー側で  
+レスポンスヘッダにAccess-Control-Allow-Origin : * を設定してある必要があります。   
+  
+参考    
+Ajax - Goodbye, JSONP. Hello, Access-Control-Allow-Origin  
+http://blog.livedoor.jp/dankogai/archives/51502865.html
