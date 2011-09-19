@@ -46,8 +46,8 @@ $.xrender = function(el,opts, callback) {
   var completeCallback = $(el).attr("data-xrender-callback"); 
   $.ajax({
 	type: method,
-	url: "api/"+service,
-	//url: service,
+	//url: "api/"+service,
+	url: service,
 	success: function(data) {
       inst.restRender(data, el);
       if (isActive) {
@@ -280,6 +280,7 @@ $.xrender.prototype = {
               var arg = RegExp.$2;
               //予約語
               arg = arg.replace('selector', 'el');
+              arg = arg.replace('this', 'el');
               //予約語
               arg = arg.replace('node', 'node');
               
