@@ -3,9 +3,11 @@ jquery.xrender.jsとは
 XMLレンダリング ライブラリ
 HTMLの拡張属性にxpathを指定するだけで、xmlデータのバインドが可能になります。
 
+<pre><code>
     <div data-xrender-xml="rss20.xml">
         <div data-xrender-xpath="channel/title">ここにタイトルが入ります</div>
     </div>
+</code></pre>
 data-xrender-xmlには読み込むxmlのurlを指定する。  
 data-xrender-xpathには、読み込んだxmlのxpathを指定する。  
 詳しい説明は、Rulesを参照してください。  
@@ -45,41 +47,47 @@ Rules
 ====
 step 1. スクリプトを宣言する  
 ----  
-
+<pre><code>
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">google.load("jquery", "1.6.0");</script>
     <script type="text/javascript">google.load("jqueryui", "1.8.12");</script>
     <script type="text/javascript" src="js/javascript-xpath.js"></script>
     <script type="text/javascript" src="js/jquery.xrender.js"></script>
-
+</code></pre>
 step 2. data-xrender-xml
 ----
 
+<pre><code>
     <div data-xrender-xml="rss20.xml">
     </div>
-
+</code></pre>
 data-xrender-xml属性を見つけると自動的にレンダリングを開始します。  
 
 step 3. data-xrender-xpath
 ----
 * バインドしたいxpathを指定します  
 
+<pre><code>
     <div id="xmlroot" data-xrender-xml="rss20.xml">
         <div data-xrender-xpath="channel/title">タイトル</div>
     </div>
+</code></pre>
 
 * 入れ子にした場合は相対パス扱いになります。  
 
+<pre><code>
     <div id="xmlroot" data-xrender-xml="rss20.xml">
         <div data-xrender-xpath="channel">
             <div data-xrender-xpath="title"></div>
         </div>
     </div>
-
+</code></pre>
 * href属性やsrc属性をしてする場合  
 
+<pre><code>
     <a data-xrender-xpath="@href:url,text"></a>
     <img data-xrender-xpath="@src:url"/>
+</code></pre>
 
 * 複数設定する場合は , でつなぐ  
 
@@ -89,12 +97,16 @@ step 4. data-xrender-callback
 ----
 xmlロード後呼ばれます  
 
+<pre><code>
     <div id="xmlroot" data-xrender-xml="sample.xml" data-xrender-callback="onLoadXml">
     </div>
+</code></pre>
 
+<pre><code>
     function onLoadXml(xml, element) {
     //処理を実装
     }
+</code></pre>
 
 step 5. data-xrender-filter  
 ----
@@ -106,10 +118,12 @@ xpathバインド時に呼ばれます
 
 <!-- アイテムの数だけ繰り返します-->  
 
+<pre><code>
     <div data-xrender-xpath="channel/item" data-xrender-filter="repeat">
       <div data-xrender-xpath="title">タイトルが入ります</div>
       <div data-xrender-xpath="link">リンクが入ります</div>
     </div>
+</code></pre>
 
 * prefix  
  プレフィックス  
@@ -119,7 +133,9 @@ xpathバインド時に呼ばれます
 
 * javascriptがそのまま利用できます。  
 
+<pre><code>
     <a data-xrender-xpath="@href:@id,title" data-xrender-filter="prefix('detail.html?id=')"></a>
+</code></pre>
 
 ### パラメータ予約語  
 
@@ -129,15 +145,18 @@ xpathバインド時に呼ばれます
 * node  
   xpathに指定されたnode  
 
+<pre><code>
     <div data-xrender-xpath="guid" data-xrender-filter="setClickEvent(this)">test</div>
+</code></pre>
 
 メソッド例  
-
+<pre><code>
     function setClickEvent(guid, element) {
         $(element).click(function(){
             alert(guid);
         });
       return false;//xpathをバインドしたくないときは、falseを返す
     }
+</code></pre>
 
 
