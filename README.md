@@ -154,6 +154,19 @@ xpathバインド時に呼ばれます
   
 ※第一引数にxpathに指定した値が入ります。
 
+step 6. 動的にレンダリングする場合
+----
+* バインドしたいxpathを指定します  
+
+    `<div id="xmlroot"">`  
+        `<div data-xrender-xpath="channel/title">タイトル</div>`  
+    `</div>`  
+
+* xrenderメソッドを実行する
+
+    $("#xmlroot").attr("data-xrender-xml", "rss20.xml");  
+    $("#xmlroot").xrender();
+
 
 重要
 ====
