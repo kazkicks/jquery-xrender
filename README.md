@@ -163,3 +163,8 @@ Same Origin Policyを回避するには、サーバー側で
 参考    
 Ajax - Goodbye, JSONP. Hello, Access-Control-Allow-Origin  
 http://blog.livedoor.jp/dankogai/archives/51502865.html
+
+利用サイト
+====
+http://wzws.jp
+
