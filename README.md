@@ -57,6 +57,9 @@ step 1. スクリプトを宣言する
     <script type="text/javascript" src="js/javascript-xpath.js"></script>  
     <script type="text/javascript" src="js/jquery.xrender.js"></script>  
 
+試しに利用されたい場合は、以下を直接指定してみてください。
+    
+    <script type="text/javascript" src="https://raw.github.com/kazkicks/jquery-xrender/master/jquery.xrender-0.9.0.js"></script>
 
 step 2. data-xrender-xml
 ----
