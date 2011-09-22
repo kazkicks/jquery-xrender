@@ -282,13 +282,13 @@ $.xrender.prototype = {
       		}    		
     		else if (filter.match(/^([^(]+)\(([^)]+)\)/)) {
               var func = RegExp.$1;
+              var arg = RegExp.$2;
               var val = '';
 			  if ($(node).children().length > 0) {
                 val = filterIndex == 0? $(node) : inst.getVal(el, attrName);
 			  }else{
                 val = filterIndex == 0? inst.htmlentities(inst.getText(node)) : inst.getVal(el, attrName);
 			  }
-              var arg = RegExp.$2;
               //予約語
               arg = arg.replace('selector', 'el');
               arg = arg.replace('this', 'el');
