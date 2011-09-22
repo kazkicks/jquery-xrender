@@ -171,6 +171,10 @@ step 6. 動的にレンダリングする場合
     $("#xmlroot").xrender();
 
 
+License
+====
+MIT License
+
 重要
 ====
 Same Origin Policyを回避するには、サーバー側で  
