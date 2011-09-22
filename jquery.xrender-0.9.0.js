@@ -44,10 +44,21 @@ $.xrender = function(el,opts, callback) {
   }
   var method = $(el).attr("data-xrender-method") != null ? $(el).attr("data-xrender-method") : "GET";
   var completeCallback = $(el).attr("data-xrender-callback"); 
+  var params = null;
+  if (method == "POST" || method == "post") {
+	var paramIndex = service.indexOf('?');
+    if (service != undefined && paramIndex != -1) {
+      if (service.length > paramIndex+1){
+        params = service.substr(paramIndex+1);
+        service = service.substr(0, paramIndex);
+      }
+    }
+  }
   $.ajax({
 	type: method,
 	//url: "api/"+service,
 	url: service,
+	data: params,
 	success: function(data) {
       inst.restRender(data, el);
       if (isActive) {
@@ -249,13 +260,13 @@ $.xrender.prototype = {
               }
         	}
     		else if (filter.match(/^([^(]+)\(\)/)) {
+                var func = RegExp.$1;
     			var val = '';
     			if ($(node).children().length > 0) {
                   val = filterIndex == 0? $(node) : inst.getVal(el, attrName);
     			}else{
                   val = filterIndex == 0? inst.htmlentities(inst.getText(node)) : inst.getVal(el, attrName);
     			}
-                var func = RegExp.$1;
                 var res = false;
                 if (val != '') {
                   if (func in window) {
@@ -270,13 +281,13 @@ $.xrender.prototype = {
                 }
       		}    		
     		else if (filter.match(/^([^(]+)\(([^)]+)\)/)) {
+              var func = RegExp.$1;
               var val = '';
 			  if ($(node).children().length > 0) {
                 val = filterIndex == 0? $(node) : inst.getVal(el, attrName);
 			  }else{
                 val = filterIndex == 0? inst.htmlentities(inst.getText(node)) : inst.getVal(el, attrName);
 			  }
-              var func = RegExp.$1;
               var arg = RegExp.$2;
               //予約語
               arg = arg.replace('selector', 'el');
@@ -326,7 +337,7 @@ $.xrender.prototype = {
   getText : function(node) {
 	  try {
 		  //属性
-		  if (typeof node == 'undefined') {
+		  if (typeof node == 'undefined' || node == '') {
 			  return '';
 		  }else if (node[0].nodeType == 2) {
 			  return node[0].nodeValue;
@@ -335,6 +346,7 @@ $.xrender.prototype = {
 		  }
 	  }catch (e) {
 		  try {
+			  console.log(e);
 		  }catch (e) {
 			  //
 		  }
