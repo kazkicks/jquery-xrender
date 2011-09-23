@@ -186,6 +186,6 @@ http://blog.livedoor.jp/dankogai/archives/51502865.html
 
 利用されているサイト
 ====
-コトバコミュニケーションサイト wzws(ワズワス)
+コトバコミュニケーションサイト wzws(ワズワス)  
 http://wzws.jp
 
