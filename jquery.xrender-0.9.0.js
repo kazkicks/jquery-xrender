@@ -60,8 +60,8 @@ $.xrender = function(el,opts, callback) {
   }
   $.ajax({
 	type: method,
-	url: (service.match(/^http/)? service: "api/"+service),
-	//url: service,
+	//url: (service.match(/^http/)? service: "api/"+service),
+	url: service,
 	data: params,
 	success: function(data) {
       inst.restRender(data, el);
