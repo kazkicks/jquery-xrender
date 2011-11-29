@@ -32,7 +32,7 @@ $.xrender = function(el,opts, callback) {
   inst.lastXml = null;
   inst.except = new Array();
   var service = $(el).attr("data-xrender-xml");
-  if (service == null){
+  if (service == null || service == ""){
 	return;
   }
   var isActive = true;
@@ -40,6 +40,11 @@ $.xrender = function(el,opts, callback) {
 	isActive = false;
   }else{
     $(el).hide();
+    var tagName = $(el).get(0).tagName.toLowerCase();
+    $(el).after($('<'+tagName +'>loading…</' +tagName +'>').css({
+    	'height' : $(el).height(),
+    	'width' : $(el).width()
+    }));
   }
   var method = $(el).attr("data-xrender-method") != null ? $(el).attr("data-xrender-method") : "GET";
   var completeCallback = $(el).attr("data-xrender-callback"); 
@@ -55,13 +60,14 @@ $.xrender = function(el,opts, callback) {
   }
   $.ajax({
 	type: method,
-	//url: "api/"+service,
-	url: service,
+	url: (service.match(/^http/)? service: "api/"+service),
+	//url: service,
 	data: params,
 	success: function(data) {
       inst.restRender(data, el);
       if (isActive) {
-        $(el).show();
+ 	    $(el).next().remove();
+ 	    $(el).show();
       }
 	  if(completeCallback != null) {
 	    eval(completeCallback +"(data, el)");
@@ -126,8 +132,10 @@ $.xrender.evaluate = function(xpath, xml) {
 	}
   }
   catch (e) {
+    if (typeof window.console != 'undefined'){
 	  console.log(e);
 	  return null;
+    }
   }
 };
 
@@ -151,6 +159,9 @@ $.xrender.prototype = {
     if (filter == 'hideIfEmpty') {
       if ($(node).length == 0) {
     	$(el).hide();
+    	$('*[data-xrender-xpath]', el).each(function(){
+    		inst.relative.push(this);
+    	});
     	return;
       }else{
       	$(el).show();
@@ -176,13 +187,13 @@ $.xrender.prototype = {
       }
       var newEl = null;
       if ($(node).length == 0) {
-  	    if ($('*[data-xrender-xpath]', $(el)).length > 0) {
-          $('*[data-xrender-xpath]', $(el)).each(function(){
-            if ($(this).children().length > 0) {
-              inst.bindXpaths(node, $(this));
+  	    if ($(el).children('[data-xrender-xpath]').length > 0) {
+          $(el).children('[data-xrender-xpath]').each(function(){
+            if ($(this).children('[data-xrender-xpath]').length > 0) {
+              inst.bindXpaths(null, $(this));
               inst.relative.push(this);
             }else{
-              inst.bindVal(this, null, "");
+              $(this).html("");
               inst.relative.push(this);
             }
 		  });
@@ -259,8 +270,8 @@ $.xrender.prototype = {
               }
         	}
     		else if (filter.match(/^([^(]+)\(\)/)) {
-                var func = RegExp.$1;
     			var val = '';
+                var func = RegExp.$1;
     			if ($(node).children().length > 0) {
                   val = filterIndex == 0? $(node) : inst.getVal(el, attrName);
     			}else{
@@ -283,14 +294,13 @@ $.xrender.prototype = {
               var func = RegExp.$1;
               var arg = RegExp.$2;
               var val = '';
-			  if ($(node).children().length > 0) {
+			  if ($(node).length > 0 && $(node).children().length > 0) {
                 val = filterIndex == 0? $(node) : inst.getVal(el, attrName);
 			  }else{
                 val = filterIndex == 0? inst.htmlentities(inst.getText(node)) : inst.getVal(el, attrName);
 			  }
               //予約語
               arg = arg.replace('selector', 'el');
-              arg = arg.replace('this', 'el');
               //予約語
               arg = arg.replace('node', 'node');
               
@@ -311,7 +321,10 @@ $.xrender.prototype = {
     		//console.log(eval('node.' +filter));
     	}
     	catch (e) {
-    		console.log(e);
+
+    		if (typeof window.console != 'undefined'){
+    			console.log(e);
+		}
     	}
     }else{
       if (filterChain.length == 0 || filterChain[filterIndex-1] == 'hideIfEmpty' || filterChain[filterIndex-1] == 'removeIfEmpty') {
@@ -336,7 +349,7 @@ $.xrender.prototype = {
   getText : function(node) {
 	  try {
 		  //属性
-		  if (typeof node == 'undefined' || node == '') {
+		  if (node == undefined || $(node).length < 1) {
 			  return '';
 		  }else if (node[0].nodeType == 2) {
 			  return node[0].nodeValue;
@@ -344,11 +357,9 @@ $.xrender.prototype = {
 			  return $(node).text();
 		  }
 	  }catch (e) {
-		  try {
-			  console.log(e);
-		  }catch (e) {
-			  //
-		  }
+		if (typeof window.console != 'undefined'){
+		  console.log(e);
+		}
 	  }
   },
   htmlentities : function(str) {
@@ -377,7 +388,7 @@ $.xrender.prototype = {
   },
   bindVal : function(el, attrName, val) {
 	var inst = this;
-	if (typeof val == "undefined") {
+	if (val == undefined || val == null) {
 	  val = '';
 	}
 	if (this.debug) {
@@ -436,6 +447,9 @@ $.xrender.prototype = {
       console.log(xml);
     }
 	var xpathEls = $('*[data-xrender-xpath]', $(parent));
+//	if ($(parent).is('[data-xrender-xpath]')){
+	//	$(xpathEls).add(parent);
+	//}
 	var inst = this;
 	xpathEls.each(function(){
 	  var xpathEl = this;
