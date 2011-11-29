@@ -171,6 +171,10 @@ step 6. 動的にレンダリングする場合
     $("#xmlroot").xrender();
 
 
+License
+====
+MIT License
+
 重要
 ====
 Same Origin Policyを回避するには、サーバー側で  
@@ -182,5 +186,6 @@ http://blog.livedoor.jp/dankogai/archives/51502865.html
 
 利用されているサイト
 ====
+コトバコミュニケーションサイト wzws(ワズワス)  
 http://wzws.jp
 
